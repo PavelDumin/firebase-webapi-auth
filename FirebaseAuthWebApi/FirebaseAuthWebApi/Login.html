@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Firebase Login Sample</title>
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.7.0/firebaseui.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/2.7.0/firebaseui.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+
+    <style>
+        #successful-login, #unsuccessful-login {
+            font-size: 18px;
+            display: none;
+        }
+    </style>
+
+    <script>
+        // Initialize Firebase
+        // TODO: Replace with your project's customized code snippet
+        var config = {
+            apiKey: "your_firebase_api_key",
+            authDomain: "your_firebase_project_id.firebaseapp.com",
+            databaseURL: "https://your_firebase_project_id.firebaseio.com",
+            projectId: "your_firebase_project_id",
+            storageBucket: "",
+            messagingSenderId: "your_firebase_sender_id"
+        };
+
+        firebase.initializeApp(config);
+
+        // Initialize the FirebaseUI Widget using Firebase.
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+        var uiConfig = {
+            callbacks: {
+                signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+                    authResult.user.getIdToken(false).then(token => sendLoginRequestToApi(authResult.user.email, token));
+
+                    // User successfully signed in.
+                    // Return type determines whether we continue the redirect automatically
+                    // or whether we leave that to developer to handle.
+                    return false;
+                },
+                uiShown: function () {
+                    // The widget is rendered.
+                    // Hide the loader.
+                    document.getElementById('loader').style.display = 'none';
+                }
+            },
+            // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+            signInFlow: 'popup',
+            signInOptions: [
+                firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                firebase.auth.PhoneAuthProvider.PROVIDER_ID
+            ]
+        };
+
+        // The start method will wait until the DOM is loaded.
+        ui.start('#firebaseui-auth-container', uiConfig);
+
+        function sendLoginRequestToApi(data, token) {
+            $.ajax({
+                url: "api/login",
+                method: "POST",
+                dataType: "json",
+                crossDomain: true,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                cache: false,
+                beforeSend: function (xhr) {
+                    /* Add authorization header */
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                success: function (data) {
+                    /* Success */
+                    document.getElementById('successful-login').style.display = 'block';
+                    document.getElementById('unsuccessful-login').style.display = 'none';
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    /* Error */
+                    document.getElementById('successful-login').style.display = 'none';
+                    document.getElementById('unsuccessful-login').style.display = 'block';
+
+                    var errorParagraph = document.getElementById("login-error-data");
+                    errorParagraph.textContent += errorThrown;
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to the Firebase Login Sample</h1>
+    <div id="firebaseui-auth-container"></div>
+    <div id="loader">Loading...</div>
+    <div id="successful-login">
+        <h2>You have successfully logged in!</h2>
+    </div>
+    <div id="unsuccessful-login">
+        <h2>Error occurred.</h2>
+        <p>
+            Details:
+            <span id="login-error-data"></span>
+        </p>
+    </div>
+</body>
+</html>
