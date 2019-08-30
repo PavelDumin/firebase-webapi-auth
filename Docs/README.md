@@ -10,6 +10,7 @@ IssuerSigningKeys are generated from Google's X509 certificate metadata:
 ![](https://github.com/PavelDumin/firebase-webapi-auth/blob/develop/Docs/Media/X509IssuerSigningKeys.jpg)
 
 And finally controller's action could be secured using **[Authorize]** attribute and get all available user data from the Identity object:
+
 ![](https://github.com/PavelDumin/firebase-webapi-auth/blob/develop/Docs/Media/SecuredController.jpg)
 
 ## Usage
