@@ -15,10 +15,10 @@ And finally controller's action could be secured using **[Authorize]** attribute
 ## Usage
 Assuming that the Firebase account exists just update appropriate settings in Web.config and Login.html files.
 
-Replace your Firebase project id **Web.config**:
+Replace your Firebase project id in **Web.config**:
 ![](https://github.com/PavelDumin/firebase-webapi-auth/blob/master/Docs/Media/WebConfigSettings.jpg)
 
-Replace your Firebase project id, API key and sender id **Login.html**:
+Replace your Firebase project id, API key and sender id in **Login.html**:
 ![](https://github.com/PavelDumin/firebase-webapi-auth/blob/master/Docs/Media/LoginHtmlSettings.jpg)
 
 Then just run the solution and enjoy!
