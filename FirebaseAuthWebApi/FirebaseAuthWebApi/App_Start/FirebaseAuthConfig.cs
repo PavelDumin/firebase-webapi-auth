@@ -68,7 +68,7 @@ namespace FirebaseAuthWebApi
 
         private static X509SecurityKey BuildSecurityKey(string certificate)
         {
-			//Removing "-----BEGIN CERTIFICATE-----" and "-----END CERTIFICATE-----" lines
+	    //Removing "-----BEGIN CERTIFICATE-----" and "-----END CERTIFICATE-----" lines
             var lines = certificate.Split('\n');
             var selectedLines = lines.Skip(1).Take(lines.Length - 3);
             var key = string.Join(Environment.NewLine, selectedLines);
